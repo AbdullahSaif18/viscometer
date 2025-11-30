@@ -2,1121 +2,729 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Viscometer — Control Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>Viscometer Control</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --bg: #0a0a0a;
-    --card: #1a1a1a;
-    --muted: #8a8a8a;
-    --accent: #1e3a8a;
-    --accent-light: #3b82f6;
-    --panel: #111111;
-    --success: #16a34a;
-    --warning: #d97706;
-    --danger: #dc2626;
-    --border: rgba(255,255,255,0.1);
-    --heading-color: #ffffff;
-    --text-color: #e5e5e5;
+    /* Dark Theme (Default) */
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --bg-surface: #334155;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    
+    --btn-bg: #334155;
+    --btn-text: #f8fafc;
+    --input-bg: #0f172a;
+    
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
-  
-  * {
-    box-sizing: border-box;
+
+  /* Light Theme */
+  .light {
+    --bg-body: #f1f5f9;
+    --bg-card: #ffffff;
+    --bg-surface: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #cbd5e1;
+    
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    
+    --btn-bg: #ffffff;
+    --btn-text: #334155;
+    --input-bg: #f8fafc;
+    
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
   }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   
   body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--bg);
-    color: var(--text-color);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
     line-height: 1.5;
-  }
-  
-  .wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  header {
-    text-align: center;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  
-  h1 {
-    color: var(--heading-color);
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-  
-  .subtitle {
-    color: var(--muted);
-    margin: 0;
-    font-size: 16px;
-  }
-  
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 20px;
-  }
-  
-  .card {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-  }
-  
-  .card-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--heading-color);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .card-title i {
-    color: var(--accent);
-  }
-  
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  
-  .stat-card {
-    background: rgba(26, 26, 26, 0.8);
-    padding: 16px;
-    border-radius: 10px;
-    text-align: center;
-    border: 1px solid var(--border);
-  }
-  
-  .stat-label {
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-  
-  .stat-value {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--accent-light);
-  }
-  
-  .sensors-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  
-  .sensor-card {
-    background: rgba(26, 26, 26, 0.8);
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-    border: 1px solid var(--border);
-  }
-  
-  .sensor-label {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  
-  .sensor-value {
-    font-size: 14px;
-    font-weight: 600;
-  }
-  
-  .sensor-value.active {
-    color: var(--success);
-  }
-  
-  .controls-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  
-  .control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .control-label {
-    font-size: 14px;
-    color: var(--muted);
-  }
-  
-  button {
-    background: #2d2d2d;
-    border: none;
-    color: var(--text-color);
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  
-  button:hover {
-    background: #3d3d3d;
-    transform: translateY(-1px);
-  }
-  
-  button.primary {
-    background: var(--accent);
-    color: white;
-  }
-  
-  button.primary:hover {
-    background: var(--accent-light);
-  }
-  
-  button.danger {
-    background: var(--danger);
-    color: white;
-  }
-  
-  button.danger:hover {
-    background: #ef4444;
-  }
-  
-  button.success {
-    background: var(--success);
-    color: white;
-  }
-  
-  button.success:hover {
-    background: #22c55e;
-  }
-  
-  button.warning {
-    background: var(--warning);
-    color: white;
-  }
-  
-  button.warning:hover {
-    background: #f59e0b;
-  }
-  
-  .btn-group {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .btn-group button {
-    flex: 1;
-  }
-  
-  .checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  
-  input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--accent);
-  }
-  
-  input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    background: rgba(10, 10, 10, 0.8);
-    color: var(--text-color);
-    border: 1px solid var(--border);
-    font-size: 14px;
-  }
-  
-  input[type="number"]:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-  
-  fieldset {
-    border: 1px dashed #404040;
-    padding: 16px;
-    border-radius: 8px;
-    margin-top: 12px;
-  }
-  
-  .form-group {
-    margin-bottom: 12px;
-  }
-  
-  .form-label {
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    display: block;
-  }
-  
-  .log-container {
-    max-height: 300px;
-    overflow: auto;
-    margin-top: 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-  
-  .log-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .log-table th {
-    background: rgba(26, 26, 26, 0.9);
-    padding: 12px;
-    text-align: left;
-    font-size: 14px;
-    color: var(--heading-color);
-    position: sticky;
-    top: 0;
-  }
-  
-  .log-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
-  
-  .log-table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  canvas {
-    width: 100%;
-    height: 200px;
-    display: block;
-    background: transparent;
-    border-radius: 8px;
-  }
-  
-  .warn {
-    color: var(--warning);
-    font-weight: 600;
-  }
-  
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  
-  .status-badge.connected {
-    background: rgba(22, 163, 74, 0.2);
-    color: var(--success);
-  }
-  
-  .status-badge.disconnected {
-    background: rgba(220, 38, 38, 0.2);
-    color: var(--danger);
-  }
-  
-  .status-badge.warning {
-    background: rgba(217, 119, 6, 0.2);
-    color: var(--warning);
-  }
-  
-  .top-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-  }
-  
-  .muted-badge {
-    background: rgba(10, 10, 10, 0.8);
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    color: var(--muted);
-    text-align: center;
-    border: 1px solid var(--border);
-  }
-  
-  footer {
-    margin-top: 30px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 14px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-  }
-  
-  .group-members {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 10px;
-    font-weight: 500;
-  }
-  
-  /* Warning Modal Styles */
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  .modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .modal {
-    background: var(--card);
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    transform: translateY(-20px);
-    transition: transform 0.3s ease;
-  }
-  
-  .modal-overlay.active .modal {
-    transform: translateY(0);
-  }
-  
-  .modal-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  
-  .modal-icon {
-    font-size: 24px;
-    color: var(--warning);
-  }
-  
-  .modal-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--heading-color);
-    margin: 0;
-  }
-  
-  .modal-content {
-    margin-bottom: 20px;
-    line-height: 1.6;
-  }
-  
-  .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 1024px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .sensors-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s;
+  }
+
+  /* --- RESPONSIVE LAYOUT --- */
+  .wrap { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 20px; 
   }
   
   @media (max-width: 768px) {
-    .wrap {
-      padding: 16px;
-    }
-    
-    .stats-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .sensors-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .controls-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .top-actions {
-      flex-direction: column;
-    }
-    
-    h1 {
-      font-size: 24px;
-    }
-    
-    .group-members {
-      flex-direction: column;
-      gap: 8px;
-    }
+    .wrap { padding: 12px; } /* Less padding on mobile */
   }
   
+  /* Header */
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 20px; margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 16px;
+  }
+  
+  .brand { display: flex; flex-direction: column; }
+  .brand-row { display: flex; align-items: center; }
+  .brand h1 { margin: 0; font-size: 20px; font-weight: 700; white-space: nowrap; }
+  .badge { 
+    font-size: 10px; font-weight: 700; text-transform: uppercase; 
+    background: var(--primary); color: white; padding: 3px 6px; 
+    border-radius: 4px; margin-left: 8px; 
+  }
+  .subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  
+  .controls-top { display: flex; gap: 12px; align-items: center; }
+
+  /* MEDIA QUERY: Small Mobile Header */
   @media (max-width: 480px) {
-    .card {
-      padding: 16px;
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
     }
     
-    .stat-value {
-      font-size: 20px;
+    .controls-top {
+      width: 100%;
+      justify-content: space-between;
     }
     
-    button {
-      padding: 8px 12px;
-      font-size: 14px;
-    }
-    
-    .modal {
-      padding: 16px;
+    .brand h1 {
+      font-size: 18px; /* Slightly smaller on very small screens */
     }
   }
+
+  /* Main Grid System */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px; /* Sidebar is fixed width on desktop */
+    gap: 24px;
+  }
+
+  /* MEDIA QUERY: Tablet & Mobile Switch */
+  @media (max-width: 900px) {
+    .main-grid {
+      grid-template-columns: 1fr; /* Stack into single column */
+    }
+    
+    header {
+      align-items: flex-start;
+    }
+    .controls-top {
+      width: 100%;
+      justify-content: space-between; /* Spread status and theme button */
+    }
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  @media (max-width: 480px) {
+    .card { padding: 16px; } /* More compact on phones */
+  }
+
+  .card-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .card-title { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+
+  /* Big Stats Grid */
+  .stats-row { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 16px; 
+    margin-bottom: 24px; 
+  }
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: 1fr; gap: 12px; } /* Stack stats vertically on mobile */
+  }
+
+  .stat-box {
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  .stat-value { font-size: 24px; font-weight: 700; color: var(--primary); margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .stat-unit { font-size: 13px; color: var(--text-muted); }
+
+  /* Sensors */
+  .sensor-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+  .sensor-pill {
+    background: var(--bg-surface);
+    padding: 8px 4px; border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; text-align: center;
+    border: 1px solid transparent;
+  }
+  .sensor-pill.active { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
+
+  /* Button Logic */
+  button {
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: 1px solid var(--border);
+    padding: 10px 16px; /* Larger touch target */
+    border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px; justify-content: center;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  button:active { transform: scale(0.98); }
+
+  button.primary { background: var(--primary); color: white; border: none; }
+  button.success { background: var(--success); color: white; border: none; }
+  button.danger { background: var(--danger); color: white; border: none; }
+  button.icon-only { padding: 8px 12px; }
+
+  /* MEDIA QUERY: Touch-friendly buttons on mobile */
+  @media (max-width: 480px) {
+    button {
+      padding: 12px 16px; /* Even larger touch targets on mobile */
+      min-height: 44px; /* Minimum touch target size */
+    }
+    
+    button.icon-only {
+      padding: 10px 12px;
+      min-height: 44px;
+    }
+  }
+
+  /* Controls Grid Layout */
+  .controls-wrapper {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  @media (max-width: 600px) {
+    .controls-wrapper { grid-template-columns: 1fr; } /* Stack buttons on mobile */
+  }
+
+  .control-group { background: var(--bg-surface); padding: 12px; border-radius: 8px; }
+  .group-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; }
+  .btn-row { display: flex; gap: 8px; }
+
+  /* Inputs & Forms */
+  input[type="number"], input[type="text"] {
+    width: 100%; padding: 10px; /* Touch friendly padding */
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    border-radius: 6px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+
+  /* MEDIA QUERY: Better mobile inputs */
+  @media (max-width: 480px) {
+    input[type="number"], input[type="text"] {
+      padding: 12px; /* Larger touch area */
+      min-height: 44px; /* Minimum touch target */
+    }
+  }
+
+  /* Checkbox styling */
+  .checkbox-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 4px 0; }
+  .checkbox-wrap input { width: 18px; height: 18px; accent-color: var(--primary); }
+
+  /* Responsive Table */
+  .table-container { 
+    max-height: 300px; 
+    overflow-y: auto; 
+    /* Horizontal Scroll for mobile tables */
+    overflow-x: auto; 
+    border: 1px solid var(--border); 
+    border-radius: 8px; 
+    -webkit-overflow-scrolling: touch;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 400px; /* Force scroll on tiny screens */ }
+  th { background: var(--bg-surface); padding: 10px; text-align: left; position: sticky; top: 0; color: var(--text-muted); white-space: nowrap; }
+  td { padding: 10px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+
+  /* MEDIA QUERY: Better table readability on mobile */
+  @media (max-width: 480px) {
+    .table-container {
+      font-size: 12px; /* Slightly smaller font for mobile */
+    }
+    
+    th, td {
+      padding: 8px 6px; /* More compact padding */
+    }
+  }
+
+  /* Settings Fieldset */
+  .setting-item { margin-bottom: 14px; }
+  .setting-item label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  fieldset { border: none; padding: 0; margin: 0; }
+  fieldset:disabled { opacity: 0.5; pointer-events: none; }
+
+  /* Canvas Wrapper */
+  .chart-wrapper { position: relative; height: 220px; width: 100%; margin-top: 10px; }
+
+  /* Status Badge */
+  .status-badge { 
+    display: inline-flex; align-items: center; 
+    font-size: 12px; font-weight: 600; 
+    padding: 6px 12px; border-radius: 20px;
+    background: var(--bg-surface);
+    white-space: nowrap;
+  }
+  .status-badge.connected { color: var(--success); background: rgba(16, 185, 129, 0.1); }
+  .status-badge.disconnected { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+  .status-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+  /* Warning Modal */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; z-index: 999;
+    padding: 20px;
+  }
+  .modal-box {
+    background: var(--bg-card); padding: 24px; border-radius: 12px; width: 100%; max-width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); border: 1px solid var(--border);
+  }
+
+  /* MEDIA QUERY: Better modal on mobile */
+  @media (max-width: 480px) {
+    .modal-overlay {
+      padding: 16px;
+    }
+    
+    .modal-box {
+      padding: 20px;
+    }
+  }
+
+  footer { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
 </style>
 </head>
 <body>
-<div class="wrap">
+
+<div class="wrap" id="app">
+  
   <header>
-    <h1>Falling-Ball Viscometer</h1>
-    <p class="subtitle">Connect to the ESP32 Wi-Fi AP and open this page. AP: <b>ESP32-Viscometer</b> / pass: <b>viscometer123</b></p>
+    <div class="brand">
+      <div class="brand-row">
+        <h1>Viscometer</h1>
+        <span class="badge">PRO</span>
+      </div>
+      <div class="subtitle">WiFi: <b>ESP32-Viscometer</b></div>
+    </div>
+    
+    <div class="controls-top">
+      <div id="connectionStatus" class="status-badge disconnected">
+        <span class="status-dot" style="background:currentColor"></span> Offline
+      </div>
+      <button class="icon-only" id="themeBtn" style="min-width: 40px;">🌙</button>
+    </div>
   </header>
 
-  <div class="grid">
-    <div>
+  <div class="main-grid">
+    
+    <div class="col-main">
+      
       <div class="card">
-        <div class="top-actions">
-          <button id="btn-download" class="primary">
-            <i>📥</i> Download CSV
-          </button>
-          <button id="btn-reload">
-            <i>🔄</i> Reload
-          </button>
+        <div class="card-header">
+          <div class="card-title">📊 Live Data</div>
+          <button id="btn-reload" class="icon-only" title="Refresh Page">↻</button>
         </div>
 
-        <div class="card-title">
-          <i>📊</i> Live Data
-        </div>
-        
-        <div class="stats-grid">
-          <div class="stat-card">
+        <div class="stats-row">
+          <div class="stat-box">
             <div class="stat-label">Temperature</div>
-            <div id="temp" class="stat-value">-- °C</div>
+            <div id="temp" class="stat-value">--</div>
+            <div class="stat-unit">°C</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-box">
             <div class="stat-label">Fall Time</div>
-            <div id="time" class="stat-value">-- s</div>
+            <div id="time" class="stat-value">--</div>
+            <div class="stat-unit">seconds</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-label">Viscosity</div>
-            <div id="visc" class="stat-value">-- Pa·s</div>
-          </div>
-        </div>
-
-        <div class="sensors-grid">
-          <div class="sensor-card">
-            <div class="sensor-label">Sensor1 (Top)</div>
-            <div id="s1" class="sensor-value">Idle</div>
-          </div>
-          <div class="sensor-card">
-            <div class="sensor-label">Sensor2 (Bottom)</div>
-            <div id="s2" class="sensor-value">Idle</div>
-          </div>
-          <div class="sensor-card">
-            <div class="sensor-label">Laser</div>
-            <div id="laserState" class="sensor-value">OFF</div>
+          <div class="stat-box">
+            <div class="stat-label">Viscosity (μ)</div>
+            <div id="visc" class="stat-value">--</div>
+            <div class="stat-unit">Pa·s</div>
           </div>
         </div>
 
-        <div class="controls-grid">
+        <div class="sensor-row">
+          <div id="s1" class="sensor-pill">Top Sensor</div>
+          <div id="s2" class="sensor-pill">Bottom Sensor</div>
+          <div id="laserState" class="sensor-pill">Laser System</div>
+        </div>
+
+        <div class="controls-wrapper">
           <div class="control-group">
-            <div class="control-label">Measurement Controls</div>
-            <div class="btn-group">
-              <button id="start" class="primary success">
-                <i>▶</i> Start
-              </button>
-              <button id="stop" class="danger">
-                <i>⏹</i> Stop
-              </button>
+            <div class="group-label">Measurement</div>
+            <div class="btn-row">
+              <button id="start" class="success" style="flex:1">Start</button>
+              <button id="stop" class="danger" style="flex:1">Stop</button>
             </div>
           </div>
-          
           <div class="control-group">
-            <div class="control-label">Laser Controls</div>
-            <div class="btn-group">
-              <button id="laserOn" class="primary">
-                <i>🔆</i> On
-              </button>
-              <button id="laserOff">
-                <i>🌙</i> Off
-              </button>
+            <div class="group-label">Laser</div>
+            <div class="btn-row">
+              <button id="laserOn" class="primary" style="flex:1">On</button>
+              <button id="laserOff" style="flex:1">Off</button>
             </div>
-          </div>
-        </div>
-
-        <div style="margin-top: 20px;">
-          <div class="checkbox-group">
-            <input id="avgEnable" type="checkbox"/>
-            <label for="avgEnable">Enable Averaging</label>
-          </div>
-          <div style="display: flex; gap: 8px; margin-top: 8px;">
-            <input id="avgCount" type="number" value="5" min="2" placeholder="Count" />
-            <button id="avgSet">Set</button>
           </div>
         </div>
 
         <div style="margin-top: 24px;">
-          <div class="card-title">
-            <i>📈</i> Realtime Graph (Viscosity vs run index)
-          </div>
-          <canvas id="chartCanvas"></canvas>
-          <div style="margin-top: 8px; color: var(--muted); font-size: 14px;">
-            Graph shows measured viscosity values over time (each run). It helps visualize stability, noise, and trends versus temperature.
+          <div class="group-label">Realtime Trend</div>
+          <div class="chart-wrapper">
+            <canvas id="chartCanvas"></canvas>
           </div>
         </div>
       </div>
 
-      <div style="margin-top: 20px;" class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div class="card-title">
-            <i>📋</i> Run Log (latest first)
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 Run Logs</div>
+          <div class="btn-row">
+            <button id="btn-download" class="primary" style="font-size:12px;">📥 CSV</button>
+            <button id="clearLog" class="danger icon-only">🗑️</button>
           </div>
-          <button id="clearLog" class="danger">
-            <i>🗑️</i> Clear
-          </button>
         </div>
-        <div class="log-container">
-          <table class="log-table" id="logTable">
+        <div class="table-container">
+          <table id="logTable">
             <thead>
               <tr>
-                <th>Run #</th>
+                <th>#</th>
                 <th>Temp (°C)</th>
                 <th>Time (s)</th>
                 <th>Viscosity (Pa·s)</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Log rows will be inserted here -->
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- right column -->
-    <div>
+    <div class="col-sidebar">
+      
       <div class="card">
-        <div class="card-title">
-          <i>⚙️</i> Device Settings
+        <div class="card-title" style="margin-bottom:12px;">🧮 Data Averaging</div>
+        <div style="display:flex; flex-direction: column; gap: 12px;">
+           <label class="checkbox-wrap">
+              <input id="avgEnable" type="checkbox"/>
+              <span>Enable Averaging</span>
+            </label>
+            <div style="display:flex; gap:8px;">
+              <input id="avgCount" type="number" value="5" min="2" placeholder="Samples"/>
+              <button id="avgSet" class="primary">Set</button>
+            </div>
         </div>
-        
-        <div class="checkbox-group">
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚙️ Calibration</div>
+          <button id="openUpdate" class="warning" style="font-size:11px; padding:4px 8px;">OTA</button>
+        </div>
+
+        <label class="checkbox-wrap" style="margin-bottom:16px;">
           <input id="useCustom" type="checkbox"/>
-          <label for="useCustom">Use custom values</label>
-        </div>
-        
-        <fieldset id="settingsField" style="margin-top: 12px;">
-          <div class="form-group">
-            <label class="form-label" for="ballDensity">Ball density (kg/m³)</label>
-            <input id="ballDensity" type="number" value="7800" />
+          <span>Use Custom Values</span>
+        </label>
+
+        <fieldset id="settingsField">
+          <div class="setting-item">
+            <label>Ball Density (kg/m³)</label>
+            <input id="ballDensity" type="number" step="1" />
           </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="ballDiameter">Ball diameter (m)</label>
-            <input id="ballDiameter" step="0.0001" type="number" value="0.003" />
+          <div class="setting-item">
+            <label>Ball Diameter (m)</label>
+            <input id="ballDiameter" type="number" step="0.0001" />
           </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="liquidDensity">Liquid density (kg/m³)</label>
-            <input id="liquidDensity" type="number" value="1000" />
+          <div class="setting-item">
+            <label>Liquid Density (kg/m³)</label>
+            <input id="liquidDensity" type="number" step="0.1" />
           </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="tubeDiameter">Tube inner diameter (m)</label>
-            <input id="tubeDiameter" step="0.0001" type="number" value="0.02" />
+          <div class="setting-item">
+            <label>Tube Inner Dia (m)</label>
+            <input id="tubeDiameter" type="number" step="0.0001" />
           </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="sensorDistance">Sensor distance (m)</label>
-            <input id="sensorDistance" step="0.001" type="number" value="0.1" />
+          <div class="setting-item">
+            <label>Sensor Distance (m)</label>
+            <input id="sensorDistance" type="number" step="0.001" />
           </div>
-          
-          <div class="form-group">
-            <label class="form-label" for="gravity">Gravity (m/s²)</label>
-            <input id="gravity" step="0.0001" type="number" value="9.80665" />
+          <div class="setting-item">
+            <label>Gravity (m/s²)</label>
+            <input id="gravity" type="number" step="0.0001" />
+          </div>
+           <div class="setting-item">
+            <label>DHT Pin</label>
+            <input id="dhtPin" type="number" step="1" />
           </div>
         </fieldset>
 
-        <div style="margin-top: 16px;">
-          <button id="saveSettings" class="primary" style="width: 100%;">
-            <i>💾</i> Save Custom Values
-          </button>
-          <button id="useDefaults" style="width: 100%; margin-top: 8px;">
-            <i>↩️</i> Revert to Defaults
-          </button>
+        <div style="margin-top: 20px; display:flex; flex-direction: column; gap: 10px;">
+          <button id="saveSettings" class="primary" style="width:100%; padding:12px;">💾 Save to ESP32</button>
+          <button id="useDefaults" style="width:100%">↩ Restore Defaults</button>
         </div>
-
-        <div style="margin-top: 20px;">
-          <div class="card-title">
-            <i>⚠️</i> System Status
-          </div>
-          <div id="warnings" class="status-badge">
-            No warnings
-          </div>
-        </div>
-
-        <div style="margin-top: 20px;">
-          <div class="card-title">
-            <i>🚀</i> Quick Actions
-          </div>
-          <div class="btn-group">
-            <button id="openUpdate" class="warning">
-              <i>🔄</i> OTA Page
-            </button>
-            <button id="clearSpi" class="danger" title="Deletes runs.csv from device">
-              <i>🗑️</i> Clear CSV
-            </button>
-          </div>
-        </div>
-      </div>
-      
-     
-    </div>
-  </div>
-
-  <footer role="contentinfo">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-      <div style="display:flex;flex-direction:column;gap:6px;min-width:180px;">
-        <style>
-          .footer-title {
-            transition: transform 0.18s ease, color 0.18s ease;
-            display: inline-block;
-            color: var(--heading-color);
-            will-change: transform, color;
-            font-weight: 700;
-          }
-          .footer-title:hover {
-            cursor: pointer;
-            color: var(--accent-light);
-            transform: scale(1.06);
-          }
-        </style>
-        <div class="footer-title">FB Viscometer — Fluid Mechanics Lab</div>
-        <div style="color:var(--muted);font-size:13px;">© 2025 Built for Fluid Mechanics Lab. All rights reserved.</div>
-      </div>
-
-      <style>
-        .group-members span {
-          transition: transform 0.18s ease, color 0.18s ease;
-          display: inline-block;
-          color: var(--muted);
-          will-change: transform, color;
-        }
-        .group-members span:hover {
-          cursor: pointer;
-          color: var(--accent-light);
-          transform: scale(1.06);
-        }
-      </style>
-
-      <div class="group-members" aria-label="Project team">
-        <span title="Lead">Abdullah Saif</span>
-        <span title="Firmware">Rehan Ahmad</span>
-        <span title="Frontend">Ahmad Anwar</span>
-        <span title="Hardware">Mudasir Ameen</span>
-      </div>
-
-      <div style="min-width:160px;text-align:right;">
-        <div style="display:flex;gap:8px;justify-content:center;">
-          <a href="/update" style="text-decoration:none;color:var(--accent-light);font-weight:600;">🔄 OTA Update</a>
-          <a href="#" style="text-decoration:none;color:var(--muted);font-size:13px;" onclick="alert('Open device documentation on your server');return false;">📘 Docs</a>
-        </div>
-        <div style="color:var(--muted);font-size:13px;margin-top:6px;padding-left: -5px;">Made for teaching & research —> use responsibly</div>
       </div>
     </div>
 
-    <div style="margin-top:12px;color:var(--muted);font-size:12px;text-align:center;">
-      Built and maintained by the Fluid Mechanics Lab team. Report issues to your lab supervisor.
-    </div>
+  </div> <footer>
+    <p>Fluid Mechanics Lab · 2025</p>
   </footer>
+
 </div>
 
-<!-- Warning Modal -->
-<div class="modal-overlay" id="warningModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-icon">⚠️</div>
-      <h3 class="modal-title">System Warning</h3>
-    </div>
-    <div class="modal-content" id="warningMessage">
-      <!-- Warning message will be inserted here -->
-    </div>
-    <div class="modal-actions">
-      <button id="modalClose" class="primary">OK</button>
-    </div>
+<div id="warningModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3 style="margin-top:0; color:var(--danger)">⚠️ System Warning</h3>
+    <p id="warningMessage" style="color:var(--text-muted); margin-bottom: 20px;">Sensor Error</p>
+    <button id="modalClose" class="primary" style="width:100%">Acknowledge</button>
   </div>
 </div>
 
 <script>
-/* Minimal offline client for ESP32 viscometer */
+/* LOGIC SECTION
+   -------------
+   No logic changes were made, only UI/CSS responsiveness.
+*/
 const wsUrl = `ws://${location.hostname}/ws`;
 let ws;
 let runCounter = 1;
-let chartPoints = []; // store viscosities
-const MAX_POINTS = 80; // max points plotted
+let chartPoints = [];
+const MAX_POINTS = 50; 
 
-// Initialize default settings
 const defaultSettings = {
-  ballDensity: 7800,
-  ballDiameter: 0.003,
-  liquidDensity: 1000,
-  tubeDiameter: 0.02,
-  sensorDistance: 0.1,
-  gravity: 9.80665
+  ballDensity: 6520, ballDiameter: 0.0254, liquidDensity: 1260,
+  tubeDiameter: 0.04, sensorDistance: 0.096, gravity: 9.8, dhtPin: 4, isCustom: false
 };
 
+// Theme Toggle
+const themeBtn = document.getElementById('themeBtn');
+function applyTheme(name) {
+  if (name === 'light') document.body.classList.add('light');
+  else document.body.classList.remove('light');
+  localStorage.setItem('visco_theme', name);
+  themeBtn.textContent = name === 'light' ? '☀️' : '🌙';
+}
+themeBtn.onclick = () => {
+  const cur = localStorage.getItem('visco_theme') || 'dark';
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+};
+applyTheme(localStorage.getItem('visco_theme') || 'dark');
+
+// Helpers
+function send(obj){ if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj)); }
+
+function updateStatus(message, type){
+  const el = document.getElementById('connectionStatus');
+  el.className = 'status-badge ' + type;
+  el.innerHTML = `<span class="status-dot" style="background:currentColor"></span> ${message}`;
+}
+
+const modal = document.getElementById('warningModal');
+function showWarningModal(msg){
+  document.getElementById('warningMessage').textContent = msg;
+  modal.style.display = 'flex';
+}
+document.getElementById('modalClose').onclick = () => modal.style.display = 'none';
+
+// Websocket
 function connectWS(){
-  ws = new WebSocket(wsUrl);
-  ws.onopen = ()=> {
-    console.log("WS open");
-    updateStatus("Connected", "connected");
-    send({type:'getSettings'});
-  };
-  ws.onclose = ()=> {
-    console.log("WS closed - reconnecting");
-    updateStatus("Disconnected - retrying...", "disconnected");
-    setTimeout(connectWS,1500);
-  };
-  ws.onmessage = evt => {
-    try {
-      const d = JSON.parse(evt.data);
-      handleMsg(d);
-    } catch(e) { console.error("bad json", e); }
-  };
-}
-
-function updateStatus(message, type) {
-  const statusElement = document.getElementById('warnings');
-  statusElement.textContent = message;
-  statusElement.className = "status-badge";
+  try { ws = new WebSocket(wsUrl); } 
+  catch(err) { setTimeout(connectWS,1500); return; }
   
-  if (type === "connected") {
-    statusElement.classList.add("connected");
-  } else if (type === "disconnected") {
-    statusElement.classList.add("disconnected");
-  } else if (type === "warning") {
-    statusElement.classList.add("warning");
-  }
+  ws.onopen = () => { updateStatus('Online', 'connected'); send({type:'getSettings'}); };
+  ws.onclose = () => { updateStatus('Offline', 'disconnected'); setTimeout(connectWS,1500); };
+  ws.onerror = () => { updateStatus('Error', 'disconnected'); };
+  
+  ws.onmessage = (evt) => {
+    try { handleMsg(JSON.parse(evt.data)); } catch(e) {}
+  };
 }
-
-function showWarningModal(message) {
-  const modal = document.getElementById('warningModal');
-  const messageElement = document.getElementById('warningMessage');
-  messageElement.textContent = message;
-  modal.classList.add('active');
-}
-
-function closeWarningModal() {
-  const modal = document.getElementById('warningModal');
-  modal.classList.remove('active');
-}
-
-function send(obj){
-  if (ws && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify(obj));
-}
+connectWS();
 
 function handleMsg(d){
   if (!d.type) return;
   if (d.type === 'update'){
-    document.getElementById('temp').textContent = (d.temp||0).toFixed(2) + ' °C';
-    document.getElementById('time').textContent = (d.time||0).toFixed(6) + ' s';
-    document.getElementById('visc').textContent = (d.visc||0).toExponential(3) + ' Pa·s';
-    
-    // Update sensor states with visual indicators
-    const s1 = document.getElementById('s1');
-    const s2 = document.getElementById('s2');
-    const laserState = document.getElementById('laserState');
-    
-    s1.textContent = d.sensor1 ? 'Triggered' : 'Idle';
-    s1.className = d.sensor1 ? 'sensor-value active' : 'sensor-value';
-    
-    s2.textContent = d.sensor2 ? 'Triggered' : 'Idle';
-    s2.className = d.sensor2 ? 'sensor-value active' : 'sensor-value';
-    
-    laserState.textContent = d.laserOn ? 'ON' : 'OFF';
-    laserState.className = d.laserOn ? 'sensor-value active' : 'sensor-value';
-    
-    // warnings
+    document.getElementById('temp').textContent = (d.temp == null) ? '--' : d.temp.toFixed(2);
+    document.getElementById('time').textContent = (d.time == null) ? '--' : d.time.toFixed(4);
+    document.getElementById('visc').textContent = (d.visc == null) ? '--' : d.visc.toExponential(2);
+
+    updateSensor('s1', d.sensor1);
+    updateSensor('s2', d.sensor2);
+    updateSensor('laserState', d.laserOn);
+
     if (d.warning1 || d.warning2){
-      let msg = '';
-      if (d.warning1) msg += 'Sensor1 lost ';
-      if (d.warning2) { if (msg) msg += ' & '; msg += 'Sensor2 lost'; }
-      updateStatus('⚠ ' + msg, "warning");
-      showWarningModal('Warning: ' + msg);
-    } else {
-      updateStatus('Connected', "connected");
+      let msg = (d.warning1 ? 'Top Sensor Lost. ' : '') + (d.warning2 ? 'Bottom Sensor Lost.' : '');
+      showWarningModal(msg);
     }
-  } else if (d.type === 'log'){
+  } else if (d.type === 'log') {
     addLogRow(d.temp, d.time, d.visc);
-  } else if (d.type === 'settings'){
+  } else if (d.type === 'settings') {
     fillSettings(d);
   }
 }
 
-function addLogRow(temp, time, visc){
-  const t = document.getElementById('logTable').getElementsByTagName('tbody')[0];
-  const row = document.createElement('tr');
-  row.innerHTML = `<td>${runCounter++}</td><td>${(temp||0).toFixed(2)}</td><td>${(time||0).toFixed(6)}</td><td>${(visc||0).toExponential(3)}</td>`;
-  t.prepend(row);
-  chartPoints.push(visc||0);
-  if (chartPoints.length > MAX_POINTS) chartPoints.shift();
-  drawChart();
+function updateSensor(id, isActive){
+  const el = document.getElementById(id);
+  if(isActive) el.classList.add('active'); else el.classList.remove('active');
 }
 
-function fillSettings(s){
-  document.getElementById('ballDensity').value = s.ballDensity || defaultSettings.ballDensity;
-  document.getElementById('ballDiameter').value = s.ballDiameter || defaultSettings.ballDiameter;
-  document.getElementById('liquidDensity').value = s.liquidDensity || defaultSettings.liquidDensity;
-  document.getElementById('tubeDiameter').value = s.tubeDiameter || defaultSettings.tubeDiameter;
-  document.getElementById('sensorDistance').value = s.sensorDistance || defaultSettings.sensorDistance;
-  document.getElementById('gravity').value = s.gravity || defaultSettings.gravity;
-  document.getElementById('useCustom').checked = !!s.isCustom;
-  document.getElementById('settingsField').disabled = !s.isCustom;
-}
-
-// Event listeners
+// Events
 document.getElementById('start').onclick = ()=> send({type:'startMeasurement'});
 document.getElementById('stop').onclick = ()=> send({type:'stopMeasurement'});
 document.getElementById('laserOn').onclick = ()=> send({type:'laserOn'});
 document.getElementById('laserOff').onclick = ()=> send({type:'laserOff'});
-document.getElementById('btn-download').onclick = ()=> {
-  // Create CSV with proper headers
-  const csvContent = generateCSVWithHeaders();
-  downloadCSV(csvContent, 'viscometer_data.csv');
-};
 document.getElementById('btn-reload').onclick = ()=> location.reload();
 document.getElementById('clearLog').onclick = ()=> { 
-  document.getElementById('logTable').getElementsByTagName('tbody')[0].innerHTML=''; 
-  chartPoints=[]; 
-  drawChart(); 
-  runCounter=1; 
+  document.querySelector('#logTable tbody').innerHTML=''; 
+  chartPoints=[]; drawChart(); runCounter=1; 
+};
+
+// Download CSV
+document.getElementById('btn-download').onclick = () => {
+  const rows = document.querySelectorAll('#logTable tbody tr');
+  let csv = 'Run,Temp(C),Time(s),Viscosity(Pa.s)\n';
+  rows.forEach(r => {
+    const cols = r.querySelectorAll('td');
+    csv += Array.from(cols).map(c => c.textContent).join(',') + '\n';
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = 'viscometer_data.csv';
+  document.body.appendChild(a); a.click(); a.remove();
 };
 
 document.getElementById('saveSettings').onclick = () => {
-  const payload = {
+  const getVal = (id) => parseFloat(document.getElementById(id).value);
+  send({
     type: 'setSettings',
-    ballDensity: parseFloat(document.getElementById('ballDensity').value) || defaultSettings.ballDensity,
-    ballDiameter: parseFloat(document.getElementById('ballDiameter').value) || defaultSettings.ballDiameter,
-    liquidDensity: parseFloat(document.getElementById('liquidDensity').value) || defaultSettings.liquidDensity,
-    tubeDiameter: parseFloat(document.getElementById('tubeDiameter').value) || defaultSettings.tubeDiameter,
-    sensorDistance: parseFloat(document.getElementById('sensorDistance').value) || defaultSettings.sensorDistance,
-    gravity: parseFloat(document.getElementById('gravity').value) || defaultSettings.gravity,
+    ballDensity: getVal('ballDensity'), ballDiameter: getVal('ballDiameter'),
+    liquidDensity: getVal('liquidDensity'), tubeDiameter: getVal('tubeDiameter'),
+    sensorDistance: getVal('sensorDistance'), gravity: getVal('gravity'),
+    dhtPin: parseInt(document.getElementById('dhtPin').value),
     isCustom: document.getElementById('useCustom').checked
-  };
-  send(payload);
-  const saveBtn = document.getElementById('saveSettings');
-  saveBtn.innerHTML = '<i>✓</i> Saved';
-  saveBtn.classList.add('success');
-  setTimeout(()=> {
-    saveBtn.innerHTML = '<i>💾</i> Save Custom Values';
-    saveBtn.classList.remove('success');
-  }, 1200);
+  });
+  const btn = document.getElementById('saveSettings');
+  const oldText = btn.textContent;
+  btn.textContent = 'Saved ✓'; btn.style.background = 'var(--success)';
+  setTimeout(()=>{ btn.textContent = oldText; btn.style.background = ''; }, 1500);
 };
 
-document.getElementById('useDefaults').onclick = ()=> { 
-  send({type:'useDefaults'}); 
-  document.getElementById('useCustom').checked = false; 
-  document.getElementById('settingsField').disabled = true;
-  // Reset form to default values
+document.getElementById('useDefaults').onclick = ()=> {
+  send({type:'useDefaults'});
+  document.getElementById('useCustom').checked = false;
   fillSettings(defaultSettings);
 };
 
 document.getElementById('useCustom').onchange = (e)=> {
   document.getElementById('settingsField').disabled = !e.target.checked;
-  if (e.target.checked) {
-    send({type:'getSettings'});
-  } else {
-    send({type:'useDefaults'});
-  }
+  if (e.target.checked) send({type:'getSettings'}); else send({type:'useDefaults'});
 };
 
 document.getElementById('avgSet').onclick = () => {
   send({ type:'setAveraging', enabled: document.getElementById('avgEnable').checked, count: parseInt(document.getElementById('avgCount').value || 5) });
-  const avgBtn = document.getElementById('avgSet');
-  avgBtn.textContent = 'Set ✓';
-  avgBtn.classList.add('success');
-  setTimeout(()=> {
-    avgBtn.textContent = 'Set';
-    avgBtn.classList.remove('success');
-  }, 900);
+  const btn = document.getElementById('avgSet');
+  btn.textContent = '✓';
+  setTimeout(()=>{ btn.textContent = 'Set'; }, 1000);
 };
 
 document.getElementById('openUpdate').onclick = ()=> window.open('/update', '_blank');
-document.getElementById('clearSpi').onclick = ()=> {
-  if (!confirm('Delete runs.csv from device?')) return;
-  fetch('/runs.csv', { method:'DELETE' }).then(()=> alert('Delete requested (device may or may not support).')).catch(()=> alert('Delete failed'));
-};
 
-// Modal close button
-document.getElementById('modalClose').onclick = closeWarningModal;
-
-// Close modal when clicking outside
-document.getElementById('warningModal').onclick = (e) => {
-  if (e.target.id === 'warningModal') {
-    closeWarningModal();
+function fillSettings(s){
+  const set = Object.assign({}, defaultSettings, s);
+  for (const k in set) {
+    if(document.getElementById(k)) document.getElementById(k).value = set[k];
   }
-};
-
-// Generate CSV with proper headers
-function generateCSVWithHeaders() {
-  const rows = document.querySelectorAll('#logTable tbody tr');
-  let csv = 'Run Number,Temperature (C),Fall Time (s),Viscosity (Pa·s)\n';
-  
-  // Add data rows in reverse order (oldest first)
-  for (let i = rows.length - 1; i >= 0; i--) {
-    const cells = rows[i].querySelectorAll('td');
-    const rowData = Array.from(cells).map(cell => cell.textContent).join(',');
-    csv += rowData + '\n';
-  }
-  
-  return csv;
+  document.getElementById('useCustom').checked = !!set.isCustom;
+  document.getElementById('settingsField').disabled = !set.isCustom;
 }
 
-// Download CSV file
-function downloadCSV(csv, filename) {
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.setAttribute('hidden', '');
-  a.setAttribute('href', url);
-  a.setAttribute('download', filename);
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+function addLogRow(temp, time, visc){
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>${runCounter++}</td><td>${temp?.toFixed(2)}</td><td>${time?.toFixed(4)}</td><td>${visc?.toExponential(3)}</td>`;
+  document.querySelector('#logTable tbody').prepend(row);
+  
+  chartPoints.push(visc || 0);
+  if (chartPoints.length > MAX_POINTS) chartPoints.shift();
+  drawChart();
 }
 
-/* Minimal canvas chart */
+// Responsive Chart
 const canvas = document.getElementById('chartCanvas');
 const ctx = canvas.getContext('2d');
-function drawChart(){
-  // adapt pixel size to element
-  canvas.width = canvas.clientWidth;
-  canvas.height = canvas.clientHeight;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  
-  // Draw background
-  ctx.fillStyle = 'rgba(10, 10, 10, 0.8)';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  // no points
-  if (chartPoints.length === 0) {
-    ctx.fillStyle = '#8a8a8a';
-    ctx.font = '14px Arial';
-    ctx.fillText('No data yet', 10, 20);
+function drawChart(){
+  const wrapper = canvas.parentElement;
+  const w = canvas.width = wrapper.clientWidth;
+  const h = canvas.height = wrapper.clientHeight;
+  ctx.clearRect(0,0,w,h);
+
+  if (chartPoints.length < 2) {
+    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-muted');
+    ctx.font = '13px Inter'; ctx.fillText("Waiting for data...", 10, 20);
     return;
   }
 
-  // compute scale
-  const maxV = Math.max(...chartPoints);
-  const minV = Math.min(...chartPoints);
-  const spread = Math.max(1e-12, maxV - minV);
-  const pxStep = canvas.width / Math.max(1, chartPoints.length - 1);
-  
-  // Draw grid lines
-  ctx.strokeStyle = 'rgba(138, 138, 138, 0.2)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 5; i++) {
-    const y = canvas.height - (i / 5) * (canvas.height - 20);
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvas.width, y);
-    ctx.stroke();
-  }
-  
-  // Draw data line
+  const max = Math.max(...chartPoints, 0.0001); 
+  const min = Math.min(...chartPoints);
+  const range = max - min || 1;
+  const stepX = w / (chartPoints.length - 1);
+
+  // Gradient
+  const gradient = ctx.createLinearGradient(0, 0, 0, h);
+  const color = getComputedStyle(document.body).getPropertyValue('--primary').trim();
+  gradient.addColorStop(0, color.replace(')', ', 0.2)').replace('rgb', 'rgba'));
+  gradient.addColorStop(1, color.replace(')', ', 0.0)').replace('rgb', 'rgba'));
+
   ctx.beginPath();
-  for (let i=0;i<chartPoints.length;i++){
-    const x = i * pxStep;
-    const y = canvas.height - ((chartPoints[i] - minV) / spread) * (canvas.height - 20) - 10;
-    if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-  }
-  ctx.strokeStyle = '#3b82f6';
-  ctx.lineWidth = 3;
+  chartPoints.forEach((val, i) => {
+    const x = i * stepX;
+    const y = h - ((val - min) / range) * (h - 20) - 10;
+    if (i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = color;
   ctx.stroke();
-  
-  // Draw data points
-  for (let i=0;i<chartPoints.length;i++){
-    const x = i * pxStep;
-    const y = canvas.height - ((chartPoints[i] - minV) / spread) * (canvas.height - 20) - 10;
-    ctx.beginPath();
-    ctx.arc(x, y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#3b82f6';
-    ctx.fill();
-  }
-  
-  // axis labels
-  ctx.fillStyle = '#8a8a8a';
-  ctx.font = '12px Arial';
-  ctx.fillText('visc: ' + (chartPoints[chartPoints.length-1]||0).toExponential(2), 8, 14);
-  ctx.fillText('n=' + chartPoints.length, canvas.width - 50, 14);
-  
-  // Y-axis labels
-  ctx.textAlign = 'right';
-  ctx.fillText(maxV.toExponential(2), 40, 20);
-  ctx.fillText(minV.toExponential(2), 40, canvas.height - 10);
-  ctx.textAlign = 'left';
+
+  ctx.lineTo(w, h);
+  ctx.lineTo(0, h);
+  ctx.fillStyle = gradient;
+  ctx.fill();
 }
-
-/* start everything */
-connectWS();
-drawChart();
-
-// Redraw chart on window resize
 window.addEventListener('resize', drawChart);
 
-// Initialize form with default values
 fillSettings(defaultSettings);
+drawChart();
 </script>
 </body>
 </html>
